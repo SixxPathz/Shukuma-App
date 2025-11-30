@@ -56,11 +56,16 @@ Notes:
 - Recommended (repo-controlled): Use `netlify.toml` (this repo already includes one).
 - Alternative: Add a `public/_redirects` with the single-line rule below. Vite will copy `public` to `dist` automatically.
 
-`public/_redirects` contents:
+`public/_redirects` contents (recommended for Netlify-only deployments):
 
 ```text
 /* /index.html 200
 ```
+
+Notes specific to Netlify-only deployment:
+- Make sure `VITE_BASE_URL` is not set to a subpath in Netlify (unless you intentionally host under a subpath). For Netlify site root, you can leave `VITE_BASE_URL` unset and the default `./` base will work for most cases.
+- Remove `force = true` from `netlify.toml` (we updated it to avoid forcing index.html for `assets` files).
+- Clear Netlify build cache and `Clear cache and deploy site` via the UI to ensure netlify picks up the new rules and assets.
 
 ## Sample `netlify.toml` (already in repo root, included here for reference)
 
