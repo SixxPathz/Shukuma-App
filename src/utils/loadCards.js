@@ -27,7 +27,7 @@ const cardFiles = {
     'Curtsy Lunge 1.jpg', 'Curtsy Lunge 2.jpg',
     'Jumping Split Lunge 1.jpg', 'Jumping Split Lunge 2.jpg',
     'Prison Squat 1.jpg', 'Prison Squat 2.jpg', 'Prison Squat 3.jpg', 'Prison Squat 4.jpg',
-    'Squat 1.jpg', 'Squat 2.jpg', 'Squat 3.jpg', 'Squat 4.jpg', 'Squat 5.jpg.jpg'
+    'Squat 1.jpg', 'Squat 2.jpg', 'Squat 3.jpg', 'Squat 4.jpg', 'Squat 5.jpg'
   ],
   upper: [
     'Decline Push-Up 1.jpg', 'Decline Push-Up 2.jpg',
