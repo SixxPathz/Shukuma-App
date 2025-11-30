@@ -19,10 +19,11 @@
   # FIREBASE_MEASUREMENT_ID = ""
 
 [[redirects]]
+  # SPA fallback: serve index.html for unknown paths, but do NOT force this redirect for ALL requests.
+  # Keep `force` off (default false), so Netlify serves static assets (like JS/CSS under /assets/) directly.
   from = "/*"
   to = "/index.html"
   status = 200
-  force = true
 
 [dev]
   # Helpful for local test using netlify CLI (optional)

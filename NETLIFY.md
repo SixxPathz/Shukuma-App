@@ -117,6 +117,53 @@ netlify dev
 - SPA routes still 404 on refresh: Ensure `netlify.toml` or `_redirects` was present in `dist` and Netlify published it correctly.
 - Environment variables not loaded: Make sure to set them in the Netlify site UI (not in a committed `.env`). If a build needs them at build-time they must be added in the Build & deploy > Environment > Environment variables tab.
 
+### MIME type error for JS assets (blank page)
+
+Example console error:
+
+```text
+Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "text/html".
+```
+This happens when the browser received HTML (usually `index.html`) instead of the real JS file — usually because the SPA fallback redirect is *forcing* index.html for every path, including asset requests.
+
+Fix:
+ - In `netlify.toml`, remove or don't set `force = true` on the `/*` redirect. By default Netlify serves files if they exist and only falls back to `index.html` when they don't. A `force = true` will rewrite the request for `/assets/*.js` to index.html resulting in the MIME error.
+
+Example corrected `netlify.toml` redirect snippet:
+
+```toml
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  # DO NOT set `force = true`
+```
+
+- How to verify and re-deploy:
+- Update `netlify.toml` (remove `force = true` if it exists) and push to `main`.
+- In Netlify UI, go to your site's Deploys and choose "Trigger deploy" → "Clear cache and deploy site" to force a fresh build and avoid any cached redirect configuration.
+- After deploy completes, load the site and open DevTools → Network to verify the asset request, e.g. `index-U0uW4u-t.js` returns `Content-Type: application/javascript` with a 200 response and not an HTML response.
+
+To test using PowerShell:
+
+```powershell
+# Check MIME type for an asset
+curl -I https://your-netlify-site.netlify.app/assets/index-U0uW4u-t.js
+
+# A proper response contains: Content-Type: application/javascript
+```
+
+If the asset returns `text/html` or a 200 with content-type html, the redirect is still applying to that request.
+
+Optional: If you see console messages like:
+
+```text
+Uncaught (in promise) Error: A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received
+```
+This is often caused by a browser extension (e.g., adblockers, devtools, or other content script messaging). Try in a clean browser session or Incognito with extensions disabled to confirm this error is not from your app.
+
+If the *build* artifact still contains the HTML (for example CDN rewrite), confirm `index.html` doesn't reference absolute or incorrect asset URLs, and ensure `vite.config.js#base` is set to `./` or your path for project site.
+
 ## Warning: previously committed secrets & `dist/` artifacts
 
 We found that earlier build artifacts (`dist/`) or environment files were committed to this repository and contain Firebase client configuration. While Firebase client config is intentionally part of SPA builds (Firebase config is client-side and expected in the bundle), you should NOT commit local `.env` files or other secret files to your repo. If a key was exposed, rotate it immediately and consider removing the files from Git history.
