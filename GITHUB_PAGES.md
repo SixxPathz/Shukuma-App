@@ -84,6 +84,10 @@ If you need to purge them from Git history (if they were public), follow an appr
   - `https://<username>.github.io/<repo>/` (project site `repo`)
   - or `https://<username>.github.io/` (if it’s a user site and you configure `main` branch root)
 
+Additional step: Configure GitHub Pages to use the `gh-pages` branch
+- Go to the repo Settings → Pages, and set the Source to `gh-pages` branch and `/ (root)` as the folder.
+  The `peaceiris/actions-gh-pages` action pushes the built `dist/` files to `gh-pages`.
+
 7) Important Notes for SPA & Routing
 - React Router uses `BrowserRouter` in the app. BrowserRouter requires server fallback to index.html for any client route.
 - We create a `404.html` (a copy of `index.html`) at build time so that GitHub Pages returns the SPA index for unknown routes.
