@@ -19,6 +19,12 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!auth) {
+      console.warn('[AuthContext] Firebase auth is not initialized. Login/Register methods will throw until VITE_FIREBASE_* is configured.');
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         // Use auth user data directly without Firestore dependency
@@ -38,6 +44,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const register = async (name, email, password) => {
+    if (!auth) throw new Error('Firebase auth is not initialized. Set VITE_FIREBASE_* env variables.');
     const res = await createUserWithEmailAndPassword(auth, email, password);
     if (res.user) {
       // update display name in Auth profile
@@ -61,16 +68,19 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
+    if (!auth) throw new Error('Firebase auth is not initialized. Set VITE_FIREBASE_* env variables.');
     const res = await signInWithEmailAndPassword(auth, email, password);
     return res.user;
   };
 
   const logout = async () => {
+    if (!auth) throw new Error('Firebase auth is not initialized. Set VITE_FIREBASE_* env variables.');
     await signOut(auth);
     setUser(null);
   };
 
   const signInWithGoogle = async () => {
+    if (!auth) throw new Error('Firebase auth is not initialized. Set VITE_FIREBASE_* env variables.');
     const res = await signInWithPopup(auth, googleProvider);
     if (res.user) {
       // Create or update a user document in client-side storage

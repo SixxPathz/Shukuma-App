@@ -73,6 +73,44 @@ src/
    npm run preview
    ```
 
+## Environment variables & secrets ⚠️
+
+This project uses Firebase for client-side authentication. To keep credentials out of source control:
+
+- Create a local `.env.local` file in the project root (this is ignored by default) and add your Firebase values using the `VITE_` prefix. For example:
+
+```dotenv
+VITE_FIREBASE_API_KEY=your-firebase-api-key
+VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+VITE_FIREBASE_APP_ID=1:xxxx:web:xxxxx
+VITE_FIREBASE_MEASUREMENT_ID=G-XXXX
+```
+
+- The project already includes an `.env.example` with placeholders you can copy from. The `.env.local` file is ignored by `.gitignore`, so it should not be committed.
+
+- If you accidentally committed `.env` or any build artifacts containing secrets (for example, `dist`), rotate the keys in the Firebase Console and remove the files from git history. Example steps:
+
+```powershell
+# Remove the committed .env from the repo (untrack and remove from cached history)
+git rm --cached .env
+git commit -m "Remove .env with secrets"
+
+# Remove build artifacts or dist from the repo if they were committed
+git rm -r --cached dist
+git commit -m "Remove dist build artifacts that contain secrets"
+
+# Use `git push` or force push by force-with-lease if necessary.
+```
+
+- Important: rotate the API key and other tokens in Firebase Console if any of these values were pushed to a public repo or included in publicly accessible files.
+
+## Prevent secrets from appearing in production bundles
+
+- Vite variables prefixed with `VITE_` will be included in the client bundle; that is expected for Firebase client-side configurations (they're not the same as server-only secrets). However, avoid committing these variables to repo or publishing build artifacts that contain them. Keep them locally in `.env.local` or set them as environment variables in your hosting platform (Netlify, Vercel, etc.).
+
 ## Card Organization
 
 The app automatically scans and loads cards from these directories:

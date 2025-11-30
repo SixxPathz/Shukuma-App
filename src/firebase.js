@@ -2,22 +2,38 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
+// Use Vite env variables (prefix with VITE_) so secrets aren't hard-coded in source.
+// Example: VITE_FIREBASE_API_KEY="your-api-key"
 const firebaseConfig = {
-  apiKey: "AIzaSyCu47TpcCoqyKJm2703APqwqbrl6CHGKl0",
-  authDomain: "shukuma-62e08.firebaseapp.com",
-  projectId: "shukuma-62e08",
-  storageBucket: "shukuma-62e08.firebasestorage.app",
-  messagingSenderId: "361854682628",
-  appId: "1:361854682628:web:a9800e055b462abbaf5751",
-  measurementId: "G-CE26ZBR43Z"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Helpful runtime warning to catch missing environment variables early.
+const missingVars = Object.entries(firebaseConfig).filter(([k, v]) => v === undefined || v === '' || v === null);
+if (missingVars.length) {
+  console.warn('[firebase] missing env vars:', missingVars.map(([k]) => k).join(', '), '\nMake sure to create a `.env.local` with the VITE_FIREBASE_* values (see README).');
+}
+
+// Initialize Firebase if config looks valid. If not, skip initialization and log a clear message.
+let app = null;
+try {
+  if (!firebaseConfig.apiKey) {
+    throw new Error('Missing VITE_FIREBASE_API_KEY (and/or other VITE_FIREBASE_* vars).');
+  }
+  app = initializeApp(firebaseConfig);
+} catch (err) {
+  // Console warnings are fine during development; this prevents runtime crashes in dev/test environments.
+  console.warn('[firebase] Firebase not initialized:', err.message || err);
+}
 
 // Export only authentication services
-// All user data, workouts, and progress are stored locally (no MongoDB backend in this repo)
-export const auth = getAuth(app);
+export const auth = app ? getAuth(app) : null;
 export const googleProvider = new GoogleAuthProvider();
 
 export default app;

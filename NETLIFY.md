@@ -35,15 +35,21 @@ Test-Path .\dist\index.html  # should return True
 
 ## Environment variables (Netlify UI)
 
-Add your Firebase config and other secret keys in Netlify: Settings → Build & deploy → Environment
+Add your Firebase config and other secret keys in Netlify: Settings → Build & deploy → Environment variables. Since this repo uses Vite, you must add the env vars with the `VITE_` prefix so they are available at build time.
 
-- FIREBASE_API_KEY
-- FIREBASE_AUTH_DOMAIN
-- FIREBASE_PROJECT_ID
-- FIREBASE_STORAGE_BUCKET
-- FIREBASE_MESSAGING_SENDER_ID
-- FIREBASE_APP_ID
-- FIREBASE_MEASUREMENT_ID
+Use the following variable names in Netlify (case-sensitive):
+
+- VITE_FIREBASE_API_KEY
+- VITE_FIREBASE_AUTH_DOMAIN
+- VITE_FIREBASE_PROJECT_ID
+- VITE_FIREBASE_STORAGE_BUCKET
+- VITE_FIREBASE_MESSAGING_SENDER_ID
+- VITE_FIREBASE_APP_ID
+- VITE_FIREBASE_MEASUREMENT_ID
+
+Notes:
+- Do not commit real secrets to the repo. Use `.env.local` for local dev and set production variables in Netlify UI.
+- `VITE_` environment variables are inlined at build time into your client bundle. Rotate keys if you believe they have been exposed publicly.
 
 ## SPA routing (React Router) support
 
@@ -110,6 +116,38 @@ netlify dev
 
 - SPA routes still 404 on refresh: Ensure `netlify.toml` or `_redirects` was present in `dist` and Netlify published it correctly.
 - Environment variables not loaded: Make sure to set them in the Netlify site UI (not in a committed `.env`). If a build needs them at build-time they must be added in the Build & deploy > Environment > Environment variables tab.
+
+## Warning: previously committed secrets & `dist/` artifacts
+
+We found that earlier build artifacts (`dist/`) or environment files were committed to this repository and contain Firebase client configuration. While Firebase client config is intentionally part of SPA builds (Firebase config is client-side and expected in the bundle), you should NOT commit local `.env` files or other secret files to your repo. If a key was exposed, rotate it immediately and consider removing the files from Git history.
+
+Steps for a safe, minimum cleanup (PowerShell):
+
+```powershell
+# Remove the .env and dist from the index so they are not tracked anymore
+git rm --cached .env
+git rm -r --cached dist
+git commit -m "Remove local env and dist artifacts that contain secrets"
+git push origin main
+```
+
+If you want to remove these files from git history entirely, use BFG or `git filter-repo` (requires a FULL repo backup and careful use):
+
+```powershell
+# Example with BFG (read the docs before using and backup first)
+# bfg --delete-files .env
+# bfg --delete-files dist
+# git reflog expire --expire=now --all
+# git gc --prune=now --aggressive
+# git push --force
+```
+
+Minimum remediation steps:
+- Immediately rotate your Firebase API key and other sensitive values in the Firebase Console.
+- Update Netlify environment variables with the new keys.
+- Rebuild & redeploy on Netlify.
+
+If you want me to help: I can prepare a short, safe script/sequence to untrack the files, update Netlify vars, and optionally run BFG with a backup plan.
 
 ## Post-deploy verification
 

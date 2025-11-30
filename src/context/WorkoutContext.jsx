@@ -79,7 +79,7 @@ export const WorkoutProvider = ({ children }) => {
         type: workoutType
       };
 
-      const token = await auth.currentUser?.getIdToken();
+      const token = await auth?.currentUser?.getIdToken();
       await saveWorkout(user.uid, workoutData, token);
       
       await updateUserProgress(user.uid, { workoutsCompleted: 1, exercisesCompleted: flippedCards.length, duration }, token);

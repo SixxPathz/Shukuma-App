@@ -16,7 +16,7 @@ const Profile = () => {
       if (user?.uid) {
         try {
           console.log('Profile: Fetching stats and workouts...');
-          const token = await auth.currentUser?.getIdToken();
+          const token = await auth?.currentUser?.getIdToken();
           const [userStats, userWorkouts] = await Promise.all([
             getUserStats(user.uid, token),
             getUserWorkouts(user.uid, 5, token)
