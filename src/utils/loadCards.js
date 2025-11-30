@@ -82,12 +82,18 @@ export const loadAllCards = () => {
     files.forEach(filename => {
       const exerciseName = extractExerciseName(filename);
       const imagePath = `${cardsBasePath}/${cardCategories[category]}/${filename}`;
+      const webpBase = imagePath.replace(/\.(jpg|jpeg|png)$/i, '');
+      const webpSrcSet = `${webpBase}-sm.webp 320w, ${webpBase}-md.webp 640w, ${webpBase}-lg.webp 1080w`;
+      const webpSm = `${webpBase}-sm.webp`;
       
       allCards.push({
         id: `${category}-${filename}`,
         exerciseName,
         category,
         imagePath,
+        webpSrcSet,
+        webpSm,
+        webpLg: `${webpBase}-lg.webp`,
         filename,
         type: 'exercise'
       });
@@ -97,11 +103,17 @@ export const loadAllCards = () => {
   // Add special cards (they can appear in random shuffle)
   Object.entries(specialCards).forEach(([key, filename]) => {
     if (key !== 'backOfCard') {
+      const imagePath = `${cardsBasePath}/${filename}`;
+      const webpBase = imagePath.replace(/\.(jpg|jpeg|png)$/i, '');
+      const webpSrcSet = `${webpBase}-sm.webp 320w, ${webpBase}-md.webp 640w, ${webpBase}-lg.webp 1080w`;
+
       allCards.push({
         id: `special-${key}`,
         exerciseName: key === 'disclaimer' ? 'Disclaimer' : 'Water Break',
         category: 'special',
-        imagePath: `${cardsBasePath}/${filename}`,
+        imagePath,
+        webpSrcSet,
+        webpLg: `${webpBase}-lg.webp`,
         filename,
         type: getCardType(filename)
       });

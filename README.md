@@ -58,6 +58,14 @@ src/
      `C:\Users\Sandile\Desktop\Shukuma App\Shukuma Cards_Full Deck`
    - The app will automatically load all images from the subdirectories
 
+   4. **Optimize & Regenerate WebP Variants (Optional)**
+      If you add or change images under `Shukuma Cards_Full Deck/`, regenerate optimized WebP variants and responsive sizes by running:
+
+      ```powershell
+      npm run optimize-images
+      npm run build
+      ```
+
 3. **Run Development Server**
    ```bash
    npm run dev

@@ -33,7 +33,7 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
-              <img src={backLogo} alt="Shukuma Logo" className="h-10 w-10 object-contain rounded" />
+              <img src={backLogo} alt="Shukuma Logo" className="h-10 w-10 object-contain rounded" decoding="async" />
               <h1 className="text-2xl font-bold text-white">Shukuma</h1>
             </div>
             <div className="flex space-x-4 items-center">

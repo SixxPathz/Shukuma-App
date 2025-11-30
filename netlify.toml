@@ -25,6 +25,16 @@
   to = "/index.html"
   status = 200
 
+[[headers]]
+  for = "/Shukuma Cards_Full Deck/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
 [dev]
   # Helpful for local test using netlify CLI (optional)
   command = "npm run dev"

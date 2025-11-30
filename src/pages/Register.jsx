@@ -44,7 +44,7 @@ const Register = () => {
     <div className="min-h-screen bg-black">
       <div className="p-6">
         <div className="flex items-center gap-3">
-          <img src={backLogo} alt="Shukuma Logo" className="h-12 w-12 object-contain rounded" />
+          <img src={backLogo} alt="Shukuma Logo" className="h-12 w-12 object-contain rounded" decoding="async" />
           <h1 className="text-2xl font-bold text-white">Shukuma</h1>
         </div>
       </div>

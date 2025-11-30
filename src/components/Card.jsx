@@ -67,12 +67,23 @@ const Card = ({ card, onClick, onFlipToExercise }) => {
           {flipState === 1 && (
             /* Exercise Image */
             <div className="w-full h-full relative">
-              <img
-                src={card.imagePath}
-                alt={card.exerciseName}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
+              <picture>
+                {card.webpSrcSet && (
+                  <source
+                    type="image/webp"
+                    srcSet={card.webpSrcSet}
+                    sizes="(max-width: 640px) 320px, (max-width: 1024px) 640px, 1080px"
+                  />
+                )}
+                <img
+                  src={card.webpSm || card.webpLg || card.imagePath}
+                  srcSet={card.webpSrcSet}
+                  alt={card.exerciseName}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                 <h3 className="text-white font-semibold text-lg">{card.exerciseName}</h3>
               </div>
