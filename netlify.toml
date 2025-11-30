@@ -1,0 +1,31 @@
+## Netlify configuration for Shukuma App
+## This ensures Netlify builds your Vite app and redirects SPA routes to index.html
+
+[build]
+  # base remains empty because package.json is at repo root
+  base = ""
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[context.production.environment]
+  # DO NOT COMMIT SECRETS - set these in Netlify UI for each environment (Production/Deploy Previews)
+  # Example (commented out):
+  # FIREBASE_API_KEY = ""
+  # FIREBASE_AUTH_DOMAIN = ""
+  # FIREBASE_PROJECT_ID = ""
+  # FIREBASE_STORAGE_BUCKET = ""
+  # FIREBASE_MESSAGING_SENDER_ID = ""
+  # FIREBASE_APP_ID = ""
+  # FIREBASE_MEASUREMENT_ID = ""
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[dev]
+  # Helpful for local test using netlify CLI (optional)
+  command = "npm run dev"
+  port = 5173
+  autoLaunch = false
