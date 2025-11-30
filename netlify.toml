@@ -4,7 +4,7 @@
 [build]
   # base remains empty because package.json is at repo root
   base = ""
-  command = "npm ci && npm run build"
+  command = "npm install && npm run build"
   publish = "dist"
 
 [context.production.environment]
