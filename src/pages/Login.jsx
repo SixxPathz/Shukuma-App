@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import backLogo from '../../Shukuma Cards_Full Deck/back of card image.jpg';
+// Image copied to public and served at runtime
+const backLogo = '/Shukuma Cards_Full Deck/back of card image.jpg';
 
 const Login = () => {
   const { login, signInWithGoogle } = useAuth();

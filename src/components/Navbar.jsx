@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
-import backLogo from '../../Shukuma Cards_Full Deck/back of card image.jpg';
+// Image copied to public and served at runtime
+const backLogo = '/Shukuma Cards_Full Deck/back of card image.jpg';
 import { useAuth } from '../context/AuthContext';
 import homeIcon from '../assets/home.png';
 import exercisesIcon from '../assets/navbar-exercise.png';
